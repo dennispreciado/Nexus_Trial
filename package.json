@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "tsc --incremental -p tests/tsconfig.json",
-    "tests": "playwright test",
+    "tests": "playwright test --retries 3",
     "smoke": "playwright test --grep smoke"
   },
   "keywords": [],

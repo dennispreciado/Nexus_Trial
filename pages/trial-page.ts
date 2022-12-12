@@ -7,6 +7,7 @@ import jwtDecode from "jwt-decode";
 export class ActTrialPage {
     readonly page: Page;
     readonly test_trial_url: string = 'https://mytest.actops.com/en-us/trial?product=nexus';
+    // readonly test_trial_url: string = 'https://mytest.actops.com/en-gb/trial?product=nexus';
     readonly production_trial_url: string = 'https://my.act.com/en-us/trial?product=nexus';
     //init trial page
     readonly firstName: Locator;
@@ -79,9 +80,9 @@ export class ActTrialPage {
 
     async fillTrialForm() {
         await this.firstName.fill('dennis');
-        await this.lastName.fill('p');
+        await this.lastName.fill('preciado');
         await this.company.fill('act');
-        await this.phone.fill('123');
+        await this.phone.fill('goarmy01');
         let email = faker.internet.exampleEmail()
         let date = new Date;
         let my_email: string = `dgabpre+admin-${date.getMonth()}${date.getDate()}${date.getFullYear()}v${Math.floor(Math.random() * (999_999_999 - 1) + 1)}@gmail.com`;
