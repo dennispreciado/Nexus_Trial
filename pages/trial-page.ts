@@ -82,7 +82,7 @@ export class ActTrialPage {
         await this.firstName.fill('dennis');
         await this.lastName.fill('preciado');
         await this.company.fill('act');
-        await this.phone.fill('goarmy01');
+        await this.phone.fill('1231234');
         let email = faker.internet.exampleEmail()
         let date = new Date;
         let my_email: string = `dgabpre+admin-${date.getMonth()}${date.getDate()}${date.getFullYear()}v${Math.floor(Math.random() * (999_999_999 - 1) + 1)}@gmail.com`;
@@ -96,6 +96,7 @@ export class ActTrialPage {
         await this.submitButton.click();
     }
     async steps_4_questions(){
+        let passd = 'goarmy01'
         await expect(this.email_not_used_title).toBeVisible();
         await this.email_not_used_title.isVisible();
         await this.continue_button.click();
@@ -106,8 +107,8 @@ export class ActTrialPage {
         await this.step3of4_title.isVisible();
         await this.continue_button.click();
         await this.step4of4_title.isVisible();
-        await this.password.fill('password123');
-        await this.confirm_password.fill('password123');
+        await this.password.fill(passd);
+        await this.confirm_password.fill(passd);
         await this.set_password_button.click();
         await expect(this.page).toHaveURL(this.trial_load_url);
     }
