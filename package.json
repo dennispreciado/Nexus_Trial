@@ -6,10 +6,11 @@
   "scripts": {
     "pretest": "tsc --incremental -p tests/tsconfig.json",
     "tests": "playwright test --retries 3",
-    "smoke": "playwright test --grep smoke"
+    "smoke": "playwright test --grep smoke",
+    "debug": "npx playwright test --debug"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dennis Preciado",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.28.0"

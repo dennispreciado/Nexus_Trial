@@ -7,6 +7,7 @@ import jwtDecode from "jwt-decode";
 export class ActTrialPage {
     readonly page: Page;
     readonly test_trial_url: string = 'https://mytest.actops.com/en-us/trial?product=nexus';
+    readonly mta_test_trial_url: string = 'https://mytest.actops.com/en-us/trial?product=classic';
     // readonly test_trial_url: string = 'https://mytest.actops.com/en-gb/trial?product=nexus';
     readonly production_trial_url: string = 'https://my.act.com/en-us/trial?product=nexus';
     //init trial page
@@ -23,6 +24,7 @@ export class ActTrialPage {
     readonly email_not_used_title_text: string = 'We’re setting up your account!';
 
     readonly continue_button: Locator;
+    readonly passd: string = 'goarmy01'
 
     readonly step1of4_title_text: string = 'Approximately how many people will be using Act!?';
     readonly step1of4_title:Locator;
@@ -40,6 +42,9 @@ export class ActTrialPage {
 
     readonly buy_now_button: Locator;
     readonly nexusdev_url: string = 'https://nexusdev.actops.com/dashboard';
+
+    readonly mta_popup: Locator;
+    readonly mta_popup1: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -72,11 +77,17 @@ export class ActTrialPage {
         this.set_password_button = page.getByRole('button', { name: 'Set Password' });
         this.buy_now_button = page.getByRole('link', { name: 'Buy now' });
 
+        this.mta_popup = page.getByRole('button', { name: 'Save' });
+        this.mta_popup1 = page.locator('#RadWindowWrapper_popupHost div');
     }
 
-    async goto() {
+    async gotoNexusTrial() {
         await this.page.goto(this.test_trial_url);
     }
+    async gotoMTATrial() {
+        await this.page.goto(this.mta_test_trial_url);
+    }
+
 
     async fillTrialForm() {
         await this.firstName.fill('dennis');
@@ -96,7 +107,7 @@ export class ActTrialPage {
         await this.submitButton.click();
     }
     async steps_4_questions(){
-        let passd = 'goarmy01'
+
         await expect(this.email_not_used_title).toBeVisible();
         await this.email_not_used_title.isVisible();
         await this.continue_button.click();
@@ -107,16 +118,20 @@ export class ActTrialPage {
         await this.step3of4_title.isVisible();
         await this.continue_button.click();
         await this.step4of4_title.isVisible();
-        await this.password.fill(passd);
-        await this.confirm_password.fill(passd);
+        await this.password.fill(this.passd);
+        await this.confirm_password.fill(this.passd);
         await this.set_password_button.click();
         await expect(this.page).toHaveURL(this.trial_load_url);
     }
-    async wait_for_redirect(){
+    async wait_for_nexus_redirect(){
         await this.buy_now_button.isEnabled();
         await expect(this.page).toHaveURL(this.nexusdev_url);
     }
-    async get_trial_token(){
+    async wait_for_mta_redirect(){
+        await this.buy_now_button.isEnabled();
+        await expect(this.page).toHaveURL(this.nexusdev_url);
+    }
+    async get_nexus_trial_token(){
         // let cookies = await this.page.context().cookies()
         // console.log(cookies);
         const sessionStorage = await this.page.evaluate(() => sessionStorage);
@@ -124,10 +139,15 @@ export class ActTrialPage {
         console.log(jwtDecode(sessionStorage.token))
 
         // console.log('\n');
-        // const localStorage = await this.page.evaluate(() => localStorage);
+        // const localStorage = await this.page.evßaluate(() => localStorage);
         // console.log(localStorage);
 
         // let token = await this.page.context().
     //    https://github.com/microsoft/playwright/issues/14062
+    }
+    async mta_welcome(){
+        await this.mta_popup1.isVisible()
+        await this.mta_popup.click()
+
     }
 }
