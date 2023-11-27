@@ -13,10 +13,10 @@
   "author": "Dennis Preciado",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.28.0"
+    "@playwright/test": "^1.40.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.3.1",
     "jwt-decode": "^3.1.2"
   }
 }
