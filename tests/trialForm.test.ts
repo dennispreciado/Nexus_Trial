@@ -1,7 +1,7 @@
-// example.spec.ts
-import { test, expect } from '@playwright/test';
-import { ActTrialPage } from '../pages/trial-page';
-// import { jwt_decode } from 'jwt-decode';
+
+import { jwt_decode } from 'jwt-decode';
+import {ActTrialPage} from "../pages/mtaTrial.page";
+import {test} from "@playwright/test";
 
 
 // test('Nexus Test Trial', async ({ page }) => {
@@ -17,12 +17,12 @@ import { ActTrialPage } from '../pages/trial-page';
 
 
 test('MTA Test trial', async ({ page }) => {
-    const playwrightDev = new ActTrialPage(page);
+    const playwrightDev = new ActTrialPage(await page);
     await playwrightDev.gotoMTATrial();
     await playwrightDev.fillTrialForm();
     await playwrightDev.submitTrialForm();
     await playwrightDev.steps_4_questions();
-    // await playwrightDev.wait_for_mta_redirect();
+    await playwrightDev.wait_for_mta_redirect();
     await playwrightDev.mta_welcome();
 });
 

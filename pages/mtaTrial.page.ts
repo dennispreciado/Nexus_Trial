@@ -3,12 +3,10 @@ import { expect, Locator, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import jwtDecode from "jwt-decode";
 
-export class ActTrialPage2 {
+export class ActTrialPage {
     readonly page: Page;
-    readonly test_trial_url: string = 'https://mytest.actops.com/en-us/trial?product=nexus';
     readonly mta_test_trial_url: string = 'https://mytest.actops.com/en-us/trial?product=classic';
-    // readonly test_trial_url: string = 'https://mytest.actops.com/en-gb/trial?product=nexus';
-    readonly production_trial_url: string = 'https://my.act.com/en-us/trial?product=nexus';
+    readonly production_trial_url: string = 'https://my.act.com/en-us/trial?product=classic';
     //init trial page
     readonly firstName: Locator;
     readonly lastName: Locator;
