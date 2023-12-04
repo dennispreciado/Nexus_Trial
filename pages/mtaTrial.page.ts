@@ -1,7 +1,7 @@
 // playwright-dev-page.ts
 import { expect, Locator, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import jwtDecode from "jwt-decode";
+import jwtDecode from 'jwt-decode';
 
 export class ActTrialPage {
     readonly page: Page;
@@ -9,19 +9,37 @@ export class ActTrialPage {
     readonly production_trial_url: string = 'https://my.act.com/en-us/trial?product=classic';
     //init trial page
     readonly firstName: Locator;
+    readonly firstNameLocator: string = '#FirstName';
     readonly lastName: Locator;
+    readonly lastNameLocator: string = '#LastName';
     readonly company: Locator;
+    readonly companyLocator:string = '#CompanyName';
     readonly phone: Locator;
+    readonly phoneLocator:string = '#PhoneNumber';
     readonly email: Locator;
+    readonly emailLocator: string = '#Email';
     readonly postal_code: Locator;
+    readonly postal_codeLocator: string = '#postalCode';
     readonly country: Locator;
+    readonly countryLocator: string = '#country';
     readonly submitButton: Locator;
+    readonly submitButtonLocator: string = '#trialBtn';
+    readonly province: Locator;
+    readonly provinceLocator: string = '#stateProv';
+    readonly languageOverride: Locator;
+    readonly languageOverrideLocator: string = '#languageOverride';
+
+    readonly token: Locator;
+    readonly tokenID: string = 'input#hiddenTokenField';
+    readonly welcomeTitle: Locator;
+    readonly welcomeTitleID: string = '#lblNavTitle';
+
     //email used page?
     readonly email_not_used_title: Locator;
     readonly email_not_used_title_text: string = 'We’re setting up your account!';
 
     readonly continue_button: Locator;
-    readonly passd: string = 'goarmy01'
+    readonly passd: string = 'goarmy01';
 
     readonly step1of4_title_text: string = 'Approximately how many people will be using Act!?';
     readonly step1of4_title:Locator;
@@ -38,23 +56,26 @@ export class ActTrialPage {
     readonly trial_load_url: string = 'https://mytest.actops.com/en-US/myact/TrialLoad';
 
     readonly buy_now_button: Locator;
-    readonly nexusdev_url: string = 'https://nexusdev.actops.com/dashboard';
+    readonly mtaHomeUrl: string = 'https://appus.actops.com/';
 
     readonly mta_popup: Locator;
     readonly mta_popup1: Locator;
 
     constructor(page: Page) {
+        //page 1
         this.page = page;
-        this.firstName = page.locator('#FirstName');
-        this.lastName = page.locator('#LastName');
-        this.company = page.locator('#CompanyName');
-        this.phone = page.locator('#PhoneNumber');
-        this.email = page.getByLabel('Email');
-        this.postal_code = page.getByLabel('Postal Code');
-        this.country = page.locator('#country');
-        this.submitButton = page.getByRole('button', { name: 'Start your free trial' });
+        this.firstName = page.locator(this.firstNameLocator);
+        this.lastName = page.locator(this.lastNameLocator);
+        this.company = page.locator(this.companyLocator);
+        this.phone = page.locator(this.phoneLocator);
+        this.email = page.locator(this.emailLocator);
+        this.postal_code = page.locator(this.postal_codeLocator);
+        this.country = page.locator(this.countryLocator);
+        this.submitButton = page.locator(this.submitButtonLocator);
+        this.province = page.locator(this.provinceLocator);
+        this.languageOverride = page.locator(this.languageOverrideLocator);
 
-        //email used?
+        //email used
         this.email_not_used_title = page.getByRole('heading', { name: 'We’re setting up your account!' });
         this.continue_button = page.getByRole('button', { name: 'Continue' });
 
@@ -76,35 +97,39 @@ export class ActTrialPage {
 
         this.mta_popup = page.getByRole('button', { name: 'Save' });
         this.mta_popup1 = page.locator('#RadWindowWrapper_popupHost div');
+        //token
+        this.token = page.locator(this.tokenID);
+        this.welcomeTitle = page.locator(this.welcomeTitleID);
     }
 
-    async gotoNexusTrial() {
-        await this.page.goto(this.test_trial_url);
-    }
-    async gotoMTATrial() {
+    async goToMTATrial() {
         await this.page.goto(this.mta_test_trial_url);
     }
 
+    async fillTrialPage1(locale: string) {
+        await this.goToMTATrial();
 
-    async fillTrialForm() {
-        await this.firstName.fill('dennis');
-        await this.lastName.fill('preciado');
-        await this.company.fill('act');
-        await this.phone.fill('1231234');
-        let email = faker.internet.exampleEmail()
-        let date = new Date;
-        let my_email: string = `dgabpre+admin-${date.getMonth()}${date.getDate()}${date.getFullYear()}v${Math.floor(Math.random() * (999_999_999 - 1) + 1)}@gmail.com`;
+        await this.firstName.fill('APC');
+        await this.lastName.fill('Automation');
+        await this.company.fill('Act');
+        await this.phone.fill('1231231234');
+        // const email = faker.internet.exampleEmail();
+        const date = new Date;
+        const emailUsername = 'dgabpre';
+        const emailDomain = '@gmail.com';
+
+        // eslint-disable-next-line max-len
+        // const my_email = `${emailUsername}+mta+${locale}-test${date.getMonth()}${date.getDate()}${date.getFullYear()}v${Math.floor(Math.random() * (999_999_999 - 1) + 1)}${emailDomain}`;
+        const my_email = `${emailUsername}+mta+${locale}${date.getMonth()}${date.getDate()}${date.getFullYear()}${emailDomain}`;
+        // eslint-disable-next-line no-console
         console.log(my_email);
         await this.email.fill(my_email);
-
-    }
-
-    async submitTrialForm() {
+        // submit
         await expect(this.submitButton).toBeEnabled();
         await this.submitButton.click();
     }
-    async steps_4_questions(){
 
+    async trial_4_questions(){
         await expect(this.email_not_used_title).toBeVisible();
         await this.email_not_used_title.isVisible();
         await this.continue_button.click();
@@ -120,31 +145,29 @@ export class ActTrialPage {
         await this.set_password_button.click();
         await expect(this.page).toHaveURL(this.trial_load_url);
     }
-    async wait_for_nexus_redirect(){
-        await this.buy_now_button.isEnabled();
-        await expect(this.page).toHaveURL(this.nexusdev_url);
-    }
-    async wait_for_mta_redirect(){
-        await this.buy_now_button.isEnabled();
-        await expect(this.page).toHaveURL(this.nexusdev_url);
-    }
-    async get_nexus_trial_token(){
-        // let cookies = await this.page.context().cookies()
-        // console.log(cookies);
-        const sessionStorage = await this.page.evaluate(() => sessionStorage);
-        console.log(sessionStorage?.token);
-        console.log(jwtDecode(sessionStorage.token))
 
-        // console.log('\n');
-        // const localStorage = await this.page.evßaluate(() => localStorage);
-        // console.log(localStorage);
+    async get_MTA_trial_token(){
+        //wait for home url
+        await this.page.waitForSelector(this.welcomeTitleID);
+        const token = await this.token.inputValue();
+        const decoded = jwtDecode(token);
+        /* eslint-disable no-console */
 
-        // let token = await this.page.context().
-    //    https://github.com/microsoft/playwright/issues/14062
-    }
-    async mta_welcome(){
-        await this.mta_popup1.isVisible()
-        await this.mta_popup.click()
+        /*
+        LOCALE='us'
+        TEST_ENV='test'
+        USER_EMAIL='dgabpre+mta+us-test112023@gmail.com'
+        USER_PASSWORD='goarmy01'
+        DATABASE='O11623203138'
+        API_URL='https://apius.actops.com/act.web.api'
+        */
+        console.log('TEST_ENV=\'test\'');
+        console.log(`API_URL='${decoded['lng']}/act.web.api'`);
+        console.log(`LOCALE='${decoded['lng']}'`);
+        console.log(`USER_EMAIL='${decoded['sub']}'`);
+        console.log(`DATABASE='${decoded['db']}'`);
+        console.log(`PASSWORD='${this.passd}'`);
 
     }
+
 }
